@@ -192,7 +192,7 @@ export function AgentActivityDashboard({ workspace }: AgentActivityDashboardProp
       <div className="min-h-screen bg-mc-bg flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-3 animate-pulse">🦞</div>
-          <p className="text-mc-text-secondary">Loading activity dashboard...</p>
+          <p className="text-mc-text-secondary">加载活动面板中...</p>
         </div>
       </div>
     );
@@ -207,9 +207,9 @@ export function AgentActivityDashboard({ workspace }: AgentActivityDashboardProp
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div className="min-w-0">
-              <h1 className="text-lg sm:text-xl font-semibold truncate">Agent Activity Dashboard</h1>
+              <h1 className="text-lg sm:text-xl font-semibold truncate">Agent 活动面板</h1>
               <p className="text-xs sm:text-sm text-mc-text-secondary truncate">
-                {workspace ? `${workspace.icon} ${workspace.name}` : 'All workspaces'} · {sseConnected ? 'Live (SSE)' : 'Polling fallback'}
+                {workspace ? `${workspace.icon} ${workspace.name}` : '所有工作区'} · {sseConnected ? '实时 (SSE)' : '轮询模式'}
               </p>
             </div>
           </div>
@@ -217,7 +217,7 @@ export function AgentActivityDashboard({ workspace }: AgentActivityDashboardProp
           <div className="flex items-center gap-2">
             <div className={`px-2.5 min-h-11 rounded-lg border text-xs flex items-center gap-2 ${sseConnected ? 'text-mc-accent-green border-mc-accent-green/40 bg-mc-accent-green/10' : 'text-mc-accent-yellow border-mc-accent-yellow/40 bg-mc-accent-yellow/10'}`}>
               <RefreshCw className="w-3.5 h-3.5" />
-              {sseConnected ? 'LIVE' : 'FALLBACK'}
+              {sseConnected ? '实时' : '轮询'}
             </div>
           </div>
         </div>
@@ -225,19 +225,19 @@ export function AgentActivityDashboard({ workspace }: AgentActivityDashboardProp
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         <section className={`grid ${isPortrait ? 'grid-cols-2' : 'grid-cols-4'} gap-3`}>
-          <MetricCard label="Agents" value={String(agents.length)} />
-          <MetricCard label="Working" value={String(agents.filter((a) => a.status === 'working').length)} />
-          <MetricCard label="Blocked" value={String(blockedAgentIds.size)} />
-          <MetricCard label="Active Tasks" value={String(activeTasks.length)} />
+          <MetricCard label="Agent" value={String(agents.length)} />
+          <MetricCard label="工作中" value={String(agents.filter((a) => a.status === 'working').length)} />
+          <MetricCard label="受阻" value={String(blockedAgentIds.size)} />
+          <MetricCard label="活跃任务" value={String(activeTasks.length)} />
         </section>
 
         <section className="bg-mc-bg-secondary border border-mc-border rounded-xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <Activity className="w-4 h-4 text-mc-accent" />
-            <h2 className="font-semibold">Now Working</h2>
+            <h2 className="font-semibold">正在工作</h2>
           </div>
           {nowWorking.length === 0 ? (
-            <div className="text-sm text-mc-text-secondary">No agents currently marked as working.</div>
+            <div className="text-sm text-mc-text-secondary">当前没有 Agent 在工作中。</div>
           ) : (
             <div className="space-y-2">
               {nowWorking.map(({ agent, currentTask }) => (
@@ -245,7 +245,7 @@ export function AgentActivityDashboard({ workspace }: AgentActivityDashboardProp
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <div className="font-medium text-sm truncate">{agent.avatar_emoji} {agent.name}</div>
-                      <div className="text-xs text-mc-text-secondary truncate">{currentTask?.title || 'No active task linked'}</div>
+                      <div className="text-xs text-mc-text-secondary truncate">{currentTask?.title || '无关联的活跃任务'}</div>
                     </div>
                     <div className="text-xs text-mc-text-secondary whitespace-nowrap flex items-center gap-1">
                       <Clock className="w-3 h-3" />
@@ -288,21 +288,21 @@ export function AgentActivityDashboard({ workspace }: AgentActivityDashboardProp
                       <span className={`text-xs px-2 py-1 rounded uppercase ${agent.status === 'working' ? 'status-working' : agent.status === 'offline' ? 'status-offline' : 'status-standby'}`}>
                         {agent.status}
                       </span>
-                      <div className="text-[11px] text-mc-text-secondary mt-1">Updated {formatDistanceToNow(new Date(agent.updated_at), { addSuffix: true })}</div>
+                      <div className="text-[11px] text-mc-text-secondary mt-1">更新于 {formatDistanceToNow(new Date(agent.updated_at), { addSuffix: true })}</div>
                     </div>
                   </div>
 
                   {isBlocked && (
                     <div className="mb-3 p-2.5 rounded-lg border border-mc-accent-red/30 bg-mc-accent-red/10 text-mc-accent-red text-xs flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4" />
-                      Blocked indicator: waiting in testing/review or offline with assigned work
+                      受阻提示：在测试/审核中等待，或已离线但有分配的任务
                     </div>
                   )}
 
                   <div className="space-y-2">
-                    <div className="text-xs font-medium uppercase text-mc-text-secondary">Timeline</div>
+                    <div className="text-xs font-medium uppercase text-mc-text-secondary">时间线</div>
                     {agentTimeline.length === 0 ? (
-                      <div className="text-xs text-mc-text-secondary">No recent activity for this agent.</div>
+                      <div className="text-xs text-mc-text-secondary">该 Agent 暂无近期活动。</div>
                     ) : (
                       agentTimeline.map((event) => (
                         <div key={event.id} className="rounded-lg border border-mc-border bg-mc-bg px-3 py-2.5 min-h-11">

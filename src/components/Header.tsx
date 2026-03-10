@@ -68,7 +68,7 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
               </div>
             </div>
 
-            <button onClick={() => router.push('/settings')} className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary shrink-0" title="Settings">
+            <button onClick={() => router.push('/settings')} className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary shrink-0" title="设置">
               <Settings className="w-5 h-5" />
             </button>
           </div>
@@ -82,17 +82,17 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
               }`}
             >
               <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-mc-accent-green animate-pulse' : 'bg-mc-accent-red'}`} />
-              {isOnline ? 'ONLINE' : 'OFFLINE'}
+              {isOnline ? '在线' : '离线'}
             </div>
 
             <div className="flex-1 grid grid-cols-2 gap-2">
               <div className="min-h-11 rounded border border-mc-border bg-mc-bg-tertiary px-2 flex items-center justify-center gap-1.5 text-xs">
                 <span className="text-mc-accent-cyan font-semibold">{activeAgents}</span>
-                <span className="text-mc-text-secondary">active</span>
+                <span className="text-mc-text-secondary">活跃</span>
               </div>
               <div className="min-h-11 rounded border border-mc-border bg-mc-bg-tertiary px-2 flex items-center justify-center gap-1.5 text-xs">
                 <span className="text-mc-accent-purple font-semibold">{tasksInQueue}</span>
-                <span className="text-mc-text-secondary">queued</span>
+                <span className="text-mc-text-secondary">排队中</span>
               </div>
             </div>
           </div>
@@ -120,7 +120,7 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
             ) : (
               <Link href="/" className="flex items-center gap-2 px-3 py-1 bg-mc-bg-tertiary rounded hover:bg-mc-bg transition-colors">
                 <LayoutGrid className="w-4 h-4" />
-                <span className="text-sm">All Workspaces</span>
+                <span className="text-sm">所有工作区</span>
               </Link>
             )}
           </div>
@@ -129,11 +129,11 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
             <div className="hidden lg:flex items-center gap-8">
               <div className="text-center">
                 <div className="text-2xl font-bold text-mc-accent-cyan">{activeAgents}</div>
-                <div className="text-xs text-mc-text-secondary uppercase">Agents Active</div>
+                <div className="text-xs text-mc-text-secondary uppercase">活跃 Agent</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-mc-accent-purple">{tasksInQueue}</div>
-                <div className="text-xs text-mc-text-secondary uppercase">Tasks in Queue</div>
+                <div className="text-xs text-mc-text-secondary uppercase">队列中的任务</div>
               </div>
             </div>
           )}
@@ -148,9 +148,9 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
               }`}
             >
               <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-mc-accent-green animate-pulse' : 'bg-mc-accent-red'}`} />
-              {isOnline ? 'ONLINE' : 'OFFLINE'}
+              {isOnline ? '在线' : '离线'}
             </div>
-            <button onClick={() => router.push('/settings')} className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="Settings">
+            <button onClick={() => router.push('/settings')} className="min-h-11 min-w-11 p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary" title="设置">
               <Settings className="w-5 h-5" />
             </button>
           </div>

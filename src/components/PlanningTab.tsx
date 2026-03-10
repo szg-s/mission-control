@@ -188,7 +188,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
 
     // Soft warning at 90s, but keep polling so long responses can still complete
     pollingWarningTimeoutRef.current = setTimeout(() => {
-      setError('The orchestrator is still processing. You can refresh safely — you will not lose your place in Planning Mode.');
+      setError('协调器仍在处理中。你可以安全刷新 —— 不会丢失规划进度。');
     }, 90000);
 
     // Hard timeout at 5 minutes to avoid infinite wait states
@@ -196,7 +196,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
       stopPolling();
       setSubmitting(false);
       setIsSubmittingAnswer(false);
-      setError('The orchestrator timed out after an extended wait. Please refresh the page and retry your last answer.');
+      setError('协调器长时间等待后超时。请刷新页面并重试上一个回答。');
     }, 300000);
   }, [pollForUpdates, stopPolling]);
 
@@ -240,10 +240,10 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
         // Start polling for the first question
         startPolling();
       } else {
-        setError(data.error || 'Failed to start planning');
+        setError(data.error || '开始规划失败');
       }
     } catch (err) {
-      setError('Failed to start planning');
+      setError('开始规划失败');
     } finally {
       setStarting(false);
     }
@@ -278,14 +278,14 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
         // Don't clear selection yet - keep it visible while waiting for response
         startPolling();
       } else {
-        setError(data.error || 'Failed to submit answer');
+        setError(data.error || '提交回答失败');
         setIsSubmittingAnswer(false); // Clear submitting state on error
         // Clear selection on error so user can try again
         setSelectedOption(null);
         setOtherText('');
       }
     } catch (err) {
-      setError('Failed to submit answer');
+      setError('提交回答失败');
       setIsSubmittingAnswer(false); // Clear submitting state on error
       // Clear selection on error so user can try again
       setSelectedOption(null);
@@ -317,14 +317,14 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
       if (res.ok) {
         startPolling();
       } else {
-        setError(data.error || 'Failed to submit answer');
+        setError(data.error || '提交回答失败');
         // Clear submission state and selection on error so user can retry
         setIsSubmittingAnswer(false);
         setSelectedOption(null);
         setOtherText('');
       }
     } catch (err) {
-      setError('Failed to submit answer');
+      setError('提交回答失败');
       // Clear submission state and selection on error so user can retry
       setIsSubmittingAnswer(false);
       setSelectedOption(null);
@@ -353,7 +353,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
         setError(`Failed to retry dispatch: ${data.error}`);
       }
     } catch (err) {
-      setError('Failed to retry dispatch');
+      setError('重试派发失败');
     } finally {
       setRetryingDispatch(false);
     }
@@ -361,7 +361,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
 
   // Cancel planning
   const cancelPlanning = async () => {
-    if (!confirm('Are you sure you want to cancel planning? This will reset the planning state.')) {
+    if (!confirm('确定要取消规划吗？这将重置规划状态。')) {
       return;
     }
 
@@ -385,10 +385,10 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
         });
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to cancel planning');
+        setError(data.error || '取消规划失败');
       }
     } catch (err) {
-      setError('Failed to cancel planning');
+      setError('取消规划失败');
     } finally {
       setCanceling(false);
     }
@@ -398,7 +398,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
     return (
       <div className="flex items-center justify-center p-8">
         <Loader2 className="w-6 h-6 animate-spin text-mc-accent" />
-        <span className="ml-2 text-mc-text-secondary">Loading planning state...</span>
+        <span className="ml-2 text-mc-text-secondary">加载规划状态中...</span>
       </div>
     );
   }
@@ -436,7 +436,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
                     {retryingDispatch ? (
                       <>
                         <Loader2 className="w-3 h-3 animate-spin" />
-                        Retrying...
+                        重试中...
                       </>
                     ) : (
                       <>
@@ -446,7 +446,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
                     )}
                   </button>
                   <span className="text-amber-400 text-xs">
-                    This will attempt to assign the task to an agent
+                    这将尝试将任务分配给一个 Agent
                   </span>
                 </div>
               </div>
@@ -511,7 +511,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
           <h3 className="text-lg font-medium mb-2">Start Planning</h3>
           <p className="text-mc-text-secondary text-sm max-w-md">
             I&apos;ll ask you a few questions to understand exactly what you need. 
-            All questions are multiple choice — just click to answer.
+            所有问题都是选择题 - 点击即可作答。
           </p>
         </div>
         
@@ -533,7 +533,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
               Starting...
             </>
           ) : (
-            <>📋 Start Planning</>
+            <>📋 开始规划</>
           )}
         </button>
       </div>
@@ -547,7 +547,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
       <div className="p-4 border-b border-mc-border flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm text-mc-text-secondary">
           <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-          <span>Planning in progress...</span>
+          <span>规划进行中...</span>
         </div>
         <button
           onClick={cancelPlanning}
@@ -615,7 +615,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
                           type="text"
                           value={otherText}
                           onChange={(e) => setOtherText(e.target.value)}
-                          placeholder="Please specify..."
+                          placeholder="请具体说明..."
                           className="w-full bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent"
                           disabled={submitting}
                         />
@@ -654,7 +654,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
                             : 'text-red-400 hover:text-red-300'
                         }`}
                       >
-                        {submitting ? 'Retrying...' : 'Retry'}
+                        {submitting ? '重试中...' : '重试'}
                       </button>
                     )}
                   </div>
@@ -666,7 +666,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
             <div className="mt-6">
               <button
                 onClick={submitAnswer}
-                disabled={!selectedOption || submitting || (selectedOption === 'Other' && !otherText.trim())}
+                disabled={!selectedOption || submitting || (selectedOption === '其他' && !otherText.trim())}
                 className="w-full px-6 py-3 bg-mc-accent text-mc-bg rounded-lg font-medium hover:bg-mc-accent/90 disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {submitting ? (
@@ -675,7 +675,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
                     Sending...
                   </>
                 ) : (
-                  'Continue →'
+                  '继续 →'
                 )}
               </button>
 
@@ -683,7 +683,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
               {isSubmittingAnswer && !submitting && (
                 <div className="mt-4 flex items-center justify-center gap-2 text-sm text-mc-text-secondary">
                   <Loader2 className="w-4 h-4 animate-spin text-mc-accent" />
-                  <span>Waiting for response...</span>
+                  <span>等待响应...</span>
                 </div>
               )}
             </div>
@@ -693,7 +693,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin text-mc-accent mx-auto mb-2" />
               <p className="text-mc-text-secondary">
-                {isWaitingForResponse ? 'Waiting for response...' : 'Waiting for next question...'}
+                {isWaitingForResponse ? '等待响应...' : '等待下一个问题...'}
               </p>
             </div>
           </div>
@@ -709,7 +709,7 @@ export function PlanningTab({ taskId, onSpecLocked }: PlanningTabProps) {
           <div className="p-3 space-y-2 max-h-48 overflow-y-auto bg-mc-bg">
             {state.messages.map((msg, i) => (
               <div key={i} className={`text-sm ${msg.role === 'user' ? 'text-mc-accent' : 'text-mc-text-secondary'}`}>
-                <span className="font-medium">{msg.role === 'user' ? 'You' : 'Orchestrator'}:</span>{' '}
+                <span className="font-medium">{msg.role === 'user' ? '你' : '协调器'}:</span>{' '}
                 <span className="opacity-75">{msg.content.substring(0, 100)}...</span>
               </div>
             ))}

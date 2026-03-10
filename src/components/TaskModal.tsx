@@ -83,7 +83,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
       });
 
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        const errData = await res.json().catch(() => ({ error: '未知错误' }));
         setSaveError(errData.error || `Save failed (${res.status})`);
         return;
       }
@@ -101,7 +101,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
             taskId: savedTask.id,
             taskTitle: savedTask.title,
             agentId: savedTask.assigned_agent_id,
-            agentName: savedTask.assigned_agent?.name || 'Unknown Agent',
+            agentName: savedTask.assigned_agent?.name || '未知 Agent',
             workspaceId: savedTask.workspace_id
           }).catch((err) => console.error('Auto-dispatch failed:', err));
         }
@@ -135,7 +135,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
           taskId: savedTask.id,
           taskTitle: savedTask.title,
           agentId: savedTask.assigned_agent_id,
-          agentName: savedTask.assigned_agent?.name || 'Unknown Agent',
+          agentName: savedTask.assigned_agent?.name || '未知 Agent',
           workspaceId: savedTask.workspace_id
         }).catch((err) => console.error('Auto-dispatch failed:', err));
       }
@@ -156,14 +156,14 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
       }
     } catch (error) {
       console.error('Failed to save task:', error);
-      setSaveError(error instanceof Error ? error.message : 'Network error — please try again');
+      setSaveError(error instanceof Error ? error.message : '网络错误 - 请重试');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!task || !confirm(`Delete "${task.title}"?`)) return;
+    if (!task || !confirm(`确认删除"${task.title}"？`)) return;
 
     try {
       const res = await fetch(`/api/tasks/${task.id}`, { method: 'DELETE' });
@@ -181,12 +181,12 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
   const priorities: TaskPriority[] = ['low', 'normal', 'high', 'urgent'];
 
   const tabs = [
-    { id: 'overview' as TabType, label: 'Overview', icon: null },
+    { id: 'overview' as TabType, label: '概览', icon: null },
     { id: 'planning' as TabType, label: 'Planning', icon: <ClipboardList className="w-4 h-4" /> },
-    { id: 'team' as TabType, label: 'Team', icon: <Users className="w-4 h-4" /> },
-    { id: 'activity' as TabType, label: 'Activity', icon: <Activity className="w-4 h-4" /> },
-    { id: 'deliverables' as TabType, label: 'Deliverables', icon: <Package className="w-4 h-4" /> },
-    { id: 'sessions' as TabType, label: 'Sessions', icon: <Bot className="w-4 h-4" /> },
+    { id: 'team' as TabType, label: '团队', icon: <Users className="w-4 h-4" /> },
+    { id: 'activity' as TabType, label: '活动记录', icon: <Activity className="w-4 h-4" /> },
+    { id: 'deliverables' as TabType, label: '交付物', icon: <Package className="w-4 h-4" /> },
+    { id: 'sessions' as TabType, label: '会话', icon: <Bot className="w-4 h-4" /> },
   ];
 
   return (
@@ -195,7 +195,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-mc-border flex-shrink-0">
           <h2 className="text-lg font-semibold">
-            {task ? task.title : 'Create New Task'}
+            {task ? task.title : '创建新任务'}
           </h2>
           <button
             onClick={onClose}
@@ -239,7 +239,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               required
               className="w-full min-h-11 bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent"
-              placeholder="What needs to be done?"
+              placeholder="需要完成的工作?"
             />
           </div>
 
@@ -251,7 +251,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={3}
               className="w-full bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent resize-none"
-              placeholder="Add details..."
+              placeholder="添加详情..."
             />
           </div>
 
@@ -280,7 +280,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
             </div>
           )}
 
-          {/* Assigned Agent */}
+          {/* 分配给 */}
           <div>
             <label className="block text-sm font-medium mb-1">Assign to</label>
             <select
@@ -294,7 +294,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
               }}
               className="w-full min-h-11 bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent"
             >
-              <option value="">Unassigned</option>
+              <option value="">未分配</option>
               {agents.map((agent) => (
                 <option key={agent.id} value={agent.id}>
                   {agent.avatar_emoji} {agent.name} - {agent.role}
@@ -323,9 +323,9 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
               </select>
             </div>
 
-            {/* Due Date */}
+            {/* 截止日期 */}
             <div>
-              <label className="block text-sm font-medium mb-1">Due Date</label>
+              <label className="block text-sm font-medium mb-1">截止日期</label>
               <input
                 type="datetime-local"
                 value={form.due_date}
@@ -404,7 +404,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
                   className="min-h-11 flex items-center gap-2 px-4 py-2 border border-mc-accent text-mc-accent rounded text-sm font-medium hover:bg-mc-accent/10 disabled:opacity-50"
                 >
                   <Plus className="w-4 h-4" />
-                  {isSubmitting ? 'Saving...' : 'Save & New'}
+                  {isSubmitting ? '保存中...' : '保存并新建'}
                 </button>
               )}
               <button
@@ -413,7 +413,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
                 className="min-h-11 flex items-center gap-2 px-4 py-2 bg-mc-accent text-mc-bg rounded text-sm font-medium hover:bg-mc-accent/90 disabled:opacity-50"
               >
                 <Save className="w-4 h-4" />
-                {isSubmitting ? 'Saving...' : 'Save'}
+                {isSubmitting ? '保存中...' : '保存'}
               </button>
             </div>
           </div>

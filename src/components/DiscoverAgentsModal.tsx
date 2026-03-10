@@ -37,7 +37,7 @@ export function DiscoverAgentsModal({ onClose, workspaceId }: DiscoverAgentsModa
       const data = await res.json();
       setAgents(data.agents || []);
     } catch (err) {
-      setError('Failed to connect to the server');
+      setError('连接服务器失败');
     } finally {
       setLoading(false);
     }
@@ -92,7 +92,7 @@ export function DiscoverAgentsModal({ onClose, workspaceId }: DiscoverAgentsModa
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || 'Failed to import agents');
+        setError(data.error || '导入 Agent 失败');
         return;
       }
 
@@ -112,7 +112,7 @@ export function DiscoverAgentsModal({ onClose, workspaceId }: DiscoverAgentsModa
       await discover();
       setSelectedIds(new Set());
     } catch (err) {
-      setError('Failed to import agents');
+      setError('导入 Agent 失败');
     } finally {
       setImporting(false);
     }
@@ -170,7 +170,7 @@ export function DiscoverAgentsModal({ onClose, workspaceId }: DiscoverAgentsModa
 
           {!loading && !error && agents.length === 0 && (
             <div className="text-center py-12 text-mc-text-secondary">
-              <p>No agents found in the Gateway.</p>
+              <p>未找到 Agent in the Gateway.</p>
               <p className="text-sm mt-2">Make sure the OpenClaw Gateway is running and has agents configured.</p>
             </div>
           )}
@@ -181,7 +181,7 @@ export function DiscoverAgentsModal({ onClose, workspaceId }: DiscoverAgentsModa
               <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                 <span className="text-sm text-mc-text-secondary">
                   {agents.length} agent{agents.length !== 1 ? 's' : ''} found
-                  {availableCount < agents.length && ` · ${agents.length - availableCount} already imported`}
+                  {availableCount < agents.length && ` · ${agents.length - availableCount} 已导入`}
                 </span>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -274,14 +274,14 @@ export function DiscoverAgentsModal({ onClose, workspaceId }: DiscoverAgentsModa
         {/* Footer */}
         <div className="flex items-center justify-between p-4 border-t border-mc-border">
           <span className="text-sm text-mc-text-secondary">
-            {selectedIds.size > 0 ? `${selectedIds.size} selected` : 'Select agents to import'}
+            {selectedIds.size > 0 ? `${selectedIds.size} selected` : '选择要导入的 Agent'}
           </span>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={onClose}
               className="min-h-11 px-4 py-2 text-sm text-mc-text-secondary hover:text-mc-text"
             >
-              {importResult ? 'Done' : 'Cancel'}
+              {importResult ? '完成' : '取消'}
             </button>
             <button
               onClick={handleImport}
@@ -291,7 +291,7 @@ export function DiscoverAgentsModal({ onClose, workspaceId }: DiscoverAgentsModa
               {importing ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Importing...
+                  导入中...
                 </>
               ) : (
                 <>

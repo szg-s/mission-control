@@ -33,14 +33,14 @@ export default function SettingsPage() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save settings');
+      setError(err instanceof Error ? err.message : '保存设置失败');
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleReset = () => {
-    if (confirm('Reset all settings to defaults? This cannot be undone.')) {
+    if (confirm('重置所有设置为默认值？此操作无法撤销。')) {
       resetConfig();
       setConfig(getConfig());
       setSaveSuccess(true);
@@ -56,7 +56,7 @@ export default function SettingsPage() {
   if (!config) {
     return (
       <div className="min-h-screen bg-mc-bg flex items-center justify-center">
-        <div className="text-mc-text-secondary">Loading settings...</div>
+        <div className="text-mc-text-secondary">加载设置中...</div>
       </div>
     );
   }
@@ -70,12 +70,12 @@ export default function SettingsPage() {
             <button
               onClick={() => router.push('/')}
               className="p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary"
-              title="Back to Mission Control"
+              title="返回 Mission Control"
             >
-              ← Back
+              ← 返回
             </button>
             <Settings className="w-6 h-6 text-mc-accent" />
-            <h1 className="text-2xl font-bold text-mc-text">Settings</h1>
+            <h1 className="text-2xl font-bold text-mc-text">设置</h1>
           </div>
 
           <div className="flex items-center gap-2">
@@ -84,7 +84,7 @@ export default function SettingsPage() {
               className="px-4 py-2 border border-mc-border rounded hover:bg-mc-bg-tertiary text-mc-text-secondary flex items-center gap-2"
             >
               <RotateCcw className="w-4 h-4" />
-              Reset to Defaults
+              恢复默认
             </button>
             <button
               onClick={handleSave}
@@ -92,7 +92,7 @@ export default function SettingsPage() {
               className="px-4 py-2 bg-mc-accent text-mc-bg rounded hover:bg-mc-accent/90 flex items-center gap-2 disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              {isSaving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? '保存中...' : '保存更改'}
             </button>
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function SettingsPage() {
         {/* Success Message */}
         {saveSuccess && (
           <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded text-green-400">
-            ✓ Settings saved successfully
+            ✓ 设置保存成功
           </div>
         )}
 
@@ -118,16 +118,16 @@ export default function SettingsPage() {
         <section className="mb-8 p-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
           <div className="flex items-center gap-2 mb-4">
             <FolderOpen className="w-5 h-5 text-mc-accent" />
-            <h2 className="text-xl font-semibold text-mc-text">Workspace Paths</h2>
+            <h2 className="text-xl font-semibold text-mc-text">工作区路径</h2>
           </div>
           <p className="text-sm text-mc-text-secondary mb-4">
-            Configure where Mission Control stores projects and deliverables.
+            配置 Mission Control 存储项目和交付物的位置。
           </p>
 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-mc-text mb-2">
-                Workspace Base Path
+                工作区根路径
               </label>
               <input
                 type="text"
@@ -137,13 +137,13 @@ export default function SettingsPage() {
                 className="w-full px-4 py-2 bg-mc-bg border border-mc-border rounded text-mc-text focus:border-mc-accent focus:outline-none"
               />
               <p className="text-xs text-mc-text-secondary mt-1">
-                Base directory for all Mission Control files. Use ~ for home directory.
+                所有 Mission Control 文件的根目录。使用 ~ 表示主目录。
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-mc-text mb-2">
-                Projects Path
+                项目路径
               </label>
               <input
                 type="text"
@@ -153,13 +153,13 @@ export default function SettingsPage() {
                 className="w-full px-4 py-2 bg-mc-bg border border-mc-border rounded text-mc-text focus:border-mc-accent focus:outline-none"
               />
               <p className="text-xs text-mc-text-secondary mt-1">
-                Directory where project folders are created. Each project gets its own folder.
+                创建项目文件夹的目录。每个项目拥有独立文件夹。
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-mc-text mb-2">
-                Default Project Name
+                默认项目名称
               </label>
               <input
                 type="text"
@@ -169,7 +169,7 @@ export default function SettingsPage() {
                 className="w-full px-4 py-2 bg-mc-bg border border-mc-border rounded text-mc-text focus:border-mc-accent focus:outline-none"
               />
               <p className="text-xs text-mc-text-secondary mt-1">
-                Default name for new projects. Can be changed per project.
+                新项目的默认名称。可按项目单独修改。
               </p>
             </div>
           </div>
@@ -179,16 +179,16 @@ export default function SettingsPage() {
         <section className="mb-8 p-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
           <div className="flex items-center gap-2 mb-4">
             <LinkIcon className="w-5 h-5 text-mc-accent" />
-            <h2 className="text-xl font-semibold text-mc-text">API Configuration</h2>
+            <h2 className="text-xl font-semibold text-mc-text">API 配置</h2>
           </div>
           <p className="text-sm text-mc-text-secondary mb-4">
-            Configure Mission Control API URL for agent orchestration.
+            配置 Mission Control API 地址，用于 Agent 编排。
           </p>
 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-mc-text mb-2">
-                Mission Control URL
+                Mission Control 地址
               </label>
               <input
                 type="text"
@@ -198,7 +198,7 @@ export default function SettingsPage() {
                 className="w-full px-4 py-2 bg-mc-bg border border-mc-border rounded text-mc-text focus:border-mc-accent focus:outline-none"
               />
               <p className="text-xs text-mc-text-secondary mt-1">
-                URL where Mission Control is running. Auto-detected by default. Change for remote access.
+                Mission Control 运行的地址。默认自动检测。远程访问时需修改。
               </p>
             </div>
           </div>
@@ -207,20 +207,20 @@ export default function SettingsPage() {
         {/* Environment Variables Note */}
         <section className="p-6 bg-blue-500/10 border border-blue-500/30 rounded-lg">
           <h3 className="text-lg font-semibold text-blue-400 mb-2">
-            📝 Environment Variables
+            📝 环境变量
           </h3>
           <p className="text-sm text-blue-300 mb-3">
-            Some settings are also configurable via environment variables in <code className="px-2 py-1 bg-mc-bg rounded">.env.local</code>:
+            部分设置也可通过环境变量在 <code className="px-2 py-1 bg-mc-bg rounded">.env.local</code>:
           </p>
           <ul className="text-sm text-blue-300 space-y-1 ml-4 list-disc">
-            <li><code>MISSION_CONTROL_URL</code> - API URL override</li>
-            <li><code>WORKSPACE_BASE_PATH</code> - Base workspace directory</li>
-            <li><code>PROJECTS_PATH</code> - Projects directory</li>
-            <li><code>OPENCLAW_GATEWAY_URL</code> - Gateway WebSocket URL</li>
-            <li><code>OPENCLAW_GATEWAY_TOKEN</code> - Gateway auth token</li>
+            <li><code>MISSION_CONTROL_URL</code> - API 地址覆盖</li>
+            <li><code>WORKSPACE_BASE_PATH</code> - 工作区根目录</li>
+            <li><code>PROJECTS_PATH</code> - 项目目录</li>
+            <li><code>OPENCLAW_GATEWAY_URL</code> - 网关 WebSocket 地址</li>
+            <li><code>OPENCLAW_GATEWAY_TOKEN</code> - 网关认证令牌</li>
           </ul>
           <p className="text-xs text-blue-400 mt-3">
-            Environment variables take precedence over UI settings for server-side operations.
+            对于服务端操作，环境变量的优先级高于界面设置。
           </p>
         </section>
       </div>

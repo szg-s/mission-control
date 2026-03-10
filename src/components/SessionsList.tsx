@@ -109,7 +109,7 @@ export function SessionsList({ taskId }: SessionsListProps) {
   };
 
   const handleDelete = async (sessionId: string) => {
-    if (!confirm('Delete this sub-agent session?')) return;
+    if (!confirm('确认删除此子 Agent 会话？')) return;
     try {
       const res = await fetch(`/api/openclaw/sessions/${sessionId}`, {
         method: 'DELETE',
@@ -125,7 +125,7 @@ export function SessionsList({ taskId }: SessionsListProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="text-mc-text-secondary">Loading sessions...</div>
+        <div className="text-mc-text-secondary">加载会话中...</div>
       </div>
     );
   }
@@ -134,7 +134,7 @@ export function SessionsList({ taskId }: SessionsListProps) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-mc-text-secondary">
         <div className="text-4xl mb-2">🤖</div>
-        <p>No sub-agent sessions yet</p>
+        <p>暂无子 Agent 会话</p>
       </div>
     );
   }
@@ -161,7 +161,7 @@ export function SessionsList({ taskId }: SessionsListProps) {
             <div className="flex items-center gap-2 mb-1">
               {getStatusIcon(session.status)}
               <span className="font-medium text-mc-text">
-                {session.agent_name || 'Sub-Agent'}
+                {session.agent_name || '子 Agent'}
               </span>
               <span className="text-xs text-mc-text-secondary capitalize">
                 {session.status}
@@ -170,22 +170,22 @@ export function SessionsList({ taskId }: SessionsListProps) {
 
             {/* Session ID */}
             <div className="text-xs text-mc-text-secondary font-mono mb-2 truncate">
-              Session: {session.openclaw_session_id}
+              会话：{session.openclaw_session_id}
             </div>
 
             {/* Duration and timestamps */}
             <div className="flex items-center gap-3 text-xs text-mc-text-secondary">
               <span>
-                Duration: {formatDuration(session.created_at, session.ended_at)}
+                时长：{formatDuration(session.created_at, session.ended_at)}
               </span>
               <span>•</span>
-              <span>Started {formatTimestamp(session.created_at)}</span>
+              <span>开始于 {formatTimestamp(session.created_at)}</span>
             </div>
 
             {/* Channel */}
             {session.channel && (
               <div className="mt-2 text-xs text-mc-text-secondary">
-                Channel: <span className="font-mono">{session.channel}</span>
+                通道：<span className="font-mono">{session.channel}</span>
               </div>
             )}
           </div>
@@ -196,7 +196,7 @@ export function SessionsList({ taskId }: SessionsListProps) {
               <button
                 onClick={() => handleMarkComplete(session.openclaw_session_id)}
                 className="p-1.5 hover:bg-mc-bg-tertiary rounded text-green-500"
-                title="Mark as complete"
+                title="标记为已完成"
               >
                 <Check className="w-4 h-4" />
               </button>
@@ -204,7 +204,7 @@ export function SessionsList({ taskId }: SessionsListProps) {
             <button
               onClick={() => handleDelete(session.openclaw_session_id)}
               className="p-1.5 hover:bg-mc-bg-tertiary rounded text-red-500"
-              title="Delete session"
+              title="删除会话"
             >
               <Trash2 className="w-4 h-4" />
             </button>

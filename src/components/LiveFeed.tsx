@@ -40,12 +40,12 @@ export function LiveFeed({ mobileMode = false, isPortrait = true }: LiveFeedProp
             <button
               onClick={toggleMinimize}
               className="p-1 rounded hover:bg-mc-bg-tertiary text-mc-text-secondary hover:text-mc-text transition-colors"
-              aria-label={effectiveMinimized ? 'Expand feed' : 'Minimize feed'}
+              aria-label={effectiveMinimized ? '展开动态' : '收起动态'}
             >
               {effectiveMinimized ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </button>
           )}
-          {!effectiveMinimized && <span className="text-sm font-medium uppercase tracking-wider">Live Feed</span>}
+          {!effectiveMinimized && <span className="text-sm font-medium uppercase tracking-wider">实时动态</span>}
         </div>
 
         {!effectiveMinimized && (
@@ -68,7 +68,7 @@ export function LiveFeed({ mobileMode = false, isPortrait = true }: LiveFeedProp
       {!effectiveMinimized && (
         <div className="flex-1 overflow-y-auto p-2 space-y-1 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
           {filteredEvents.length === 0 ? (
-            <div className="text-center py-8 text-mc-text-secondary text-sm">No events yet</div>
+            <div className="text-center py-8 text-mc-text-secondary text-sm">暂无事件</div>
           ) : (
             filteredEvents.map((event) => <EventItem key={event.id} event={event} />)
           )}

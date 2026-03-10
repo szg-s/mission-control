@@ -96,7 +96,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
   };
 
   const handleDelete = async () => {
-    if (!agent || !confirm(`Delete ${agent.name}?`)) return;
+    if (!agent || !confirm(`确认删除 ${agent.name}？`)) return;
 
     try {
       const res = await fetch(`/api/agents/${agent.id}`, { method: 'DELETE' });
@@ -114,7 +114,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
   };
 
   const tabs = [
-    { id: 'info', label: 'Info' },
+    { id: 'info', label: '基本信息' },
     { id: 'soul', label: 'SOUL.md' },
     { id: 'user', label: 'USER.md' },
     { id: 'agents', label: 'AGENTS.md' },
@@ -126,7 +126,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-mc-border">
           <h2 className="text-lg font-semibold">
-            {agent ? `Edit ${agent.name}` : 'Create New Agent'}
+            {agent ? `编辑 ${agent.name}` : '创建新 Agent'}
           </h2>
           <button
             onClick={onClose}
@@ -187,7 +187,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
                   className="w-full min-h-11 bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent"
-                  placeholder="Agent name"
+                  placeholder="Agent 名称"
                 />
               </div>
 
@@ -200,7 +200,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
                   required
                   className="w-full min-h-11 bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent"
-                  placeholder="e.g., Code & Automation"
+                  placeholder="例如：编码与自动化"
                 />
               </div>
 
@@ -212,7 +212,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                   rows={2}
                   className="w-full bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent resize-none"
-                  placeholder="What does this agent do?"
+                  placeholder="这个 Agent 做什么？"
                 />
               </div>
 
@@ -224,9 +224,9 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
                   onChange={(e) => setForm({ ...form, status: e.target.value as AgentStatus })}
                   className="w-full min-h-11 bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent"
                 >
-                  <option value="standby">Standby</option>
-                  <option value="working">Working</option>
-                  <option value="offline">Offline</option>
+                  <option value="standby">待命</option>
+                  <option value="working">工作中</option>
+                  <option value="offline">离线</option>
                 </select>
               </div>
 
@@ -240,7 +240,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
                   className="w-4 h-4"
                 />
                 <label htmlFor="is_master" className="text-sm">
-                  Master Orchestrator (can coordinate other agents)
+                  主协调器（可以协调其他 Agent）
                 </label>
               </div>
 
@@ -249,27 +249,27 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
                 <label className="block text-sm font-medium mb-1">
                   Model
                   {defaultModel && form.model === defaultModel && (
-                    <span className="ml-2 text-xs text-mc-text-secondary">(Default)</span>
+                    <span className="ml-2 text-xs text-mc-text-secondary">（默认）</span>
                   )}
                 </label>
                 {modelsLoading ? (
-                  <div className="text-sm text-mc-text-secondary">Loading available models...</div>
+                  <div className="text-sm text-mc-text-secondary">加载可用模型中...</div>
                 ) : (
                   <select
                     value={form.model}
                     onChange={(e) => setForm({ ...form, model: e.target.value })}
                     className="w-full min-h-11 bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm focus:outline-none focus:border-mc-accent"
                   >
-                    <option value="">-- Use Default Model --</option>
+                    <option value="">-- 使用默认模型 --</option>
                     {availableModels.map((model) => (
                       <option key={model} value={model}>
-                        {model}{defaultModel === model ? ' (Default)' : ''}
+                        {model}{defaultModel === model ? ' （默认）' : ''}
                       </option>
                     ))}
                   </select>
                 )}
                 <p className="text-xs text-mc-text-secondary mt-1">
-                  AI model used by this agent. Leave empty to use OpenClaw default.
+                  此 Agent 使用的 AI 模型。留空则使用 OpenClaw 默认模型。
                 </p>
               </div>
             </div>
@@ -278,14 +278,14 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
           {activeTab === 'soul' && (
             <div>
               <label className="block text-sm font-medium mb-2">
-                SOUL.md - Agent Personality & Identity
+                SOUL.md - Agent 人格与身份
               </label>
               <textarea
                 value={form.soul_md}
                 onChange={(e) => setForm({ ...form, soul_md: e.target.value })}
                 rows={15}
                 className="w-full bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm font-mono focus:outline-none focus:border-mc-accent resize-none"
-                placeholder="# Agent Name&#10;&#10;Define this agent's personality, values, and communication style..."
+                placeholder="# Agent Name&#10;&#10;定义此 Agent 的人格、价值观和沟通风格..."
               />
             </div>
           )}
@@ -293,14 +293,14 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
           {activeTab === 'user' && (
             <div>
               <label className="block text-sm font-medium mb-2">
-                USER.md - Context About the Human
+                USER.md - 关于用户的上下文
               </label>
               <textarea
                 value={form.user_md}
                 onChange={(e) => setForm({ ...form, user_md: e.target.value })}
                 rows={15}
                 className="w-full bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm font-mono focus:outline-none focus:border-mc-accent resize-none"
-                placeholder="# User Context&#10;&#10;Information about the human this agent works with..."
+                placeholder="# User Context&#10;&#10;关于此 Agent 服务的用户信息..."
               />
             </div>
           )}
@@ -308,14 +308,14 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
           {activeTab === 'agents' && (
             <div>
               <label className="block text-sm font-medium mb-2">
-                AGENTS.md - Team Awareness
+                AGENTS.md - 团队感知
               </label>
               <textarea
                 value={form.agents_md}
                 onChange={(e) => setForm({ ...form, agents_md: e.target.value })}
                 rows={15}
                 className="w-full bg-mc-bg border border-mc-border rounded px-3 py-2 text-sm font-mono focus:outline-none focus:border-mc-accent resize-none"
-                placeholder="# Team Roster&#10;&#10;Information about other agents this agent works with..."
+                placeholder="# Team Roster&#10;&#10;关于此 Agent 协作的其他 Agent 信息..."
               />
             </div>
           )}
@@ -349,7 +349,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
               className="min-h-11 flex items-center gap-2 px-4 py-2 bg-mc-accent text-mc-bg rounded text-sm font-medium hover:bg-mc-accent/90 disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              {isSubmitting ? 'Saving...' : 'Save'}
+              {isSubmitting ? '保存中...' : '保存'}
             </button>
           </div>
         </div>

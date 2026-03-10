@@ -88,7 +88,7 @@ export function AgentsSidebar({ workspaceId, mobileMode = false, isPortrait = tr
         } else {
           const error = await res.json();
           console.error('Failed to connect to OpenClaw:', error);
-          alert(`Failed to connect: ${error.error || 'Unknown error'}`);
+          alert(`连接失败：${error.error || '未知错误'}`);
         }
       }
     } catch (error) {
@@ -124,14 +124,14 @@ export function AgentsSidebar({ workspaceId, mobileMode = false, isPortrait = tr
             <button
               onClick={toggleMinimize}
               className="p-1 rounded hover:bg-mc-bg-tertiary text-mc-text-secondary hover:text-mc-text transition-colors"
-              aria-label={effectiveMinimized ? 'Expand agents' : 'Minimize agents'}
+              aria-label={effectiveMinimized ? '展开 Agent 列表' : '收起 Agent 列表'}
             >
               {effectiveMinimized ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
             </button>
           )}
           {!effectiveMinimized && (
             <>
-              <span className="text-sm font-medium uppercase tracking-wider">Agents</span>
+              <span className="text-sm font-medium uppercase tracking-wider">Agent</span>
               <span className="bg-mc-bg-tertiary text-mc-text-secondary text-xs px-2 py-0.5 rounded ml-2">{agents.length}</span>
             </>
           )}
@@ -143,7 +143,7 @@ export function AgentsSidebar({ workspaceId, mobileMode = false, isPortrait = tr
               <div className="mb-3 mt-3 px-3 py-2 bg-green-500/10 border border-green-500/20 rounded-lg">
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-green-400">●</span>
-                  <span className="text-mc-text">Active Sub-Agents:</span>
+                  <span className="text-mc-text">活跃子 Agent：</span>
                   <span className="font-bold text-green-400">{activeSubAgents}</span>
                 </div>
               </div>
@@ -220,7 +220,7 @@ export function AgentsSidebar({ workspaceId, mobileMode = false, isPortrait = tr
                   <div className="text-xs text-mc-text-secondary truncate flex items-center gap-1">
                     {agent.role}
                     {agent.source === 'gateway' && (
-                      <span className="text-[10px] px-1 py-0 bg-blue-500/20 text-blue-400 rounded" title="Imported from Gateway">
+                      <span className="text-[10px] px-1 py-0 bg-blue-500/20 text-blue-400 rounded" title="从网关导入">
                         GW
                       </span>
                     )}
@@ -244,17 +244,17 @@ export function AgentsSidebar({ workspaceId, mobileMode = false, isPortrait = tr
                     {isConnecting ? (
                       <>
                         <Loader2 className="w-3 h-3 animate-spin" />
-                        <span>Connecting...</span>
+                        <span>连接中...</span>
                       </>
                     ) : openclawSession ? (
                       <>
                         <Zap className="w-3 h-3" />
-                        <span>OpenClaw Connected</span>
+                        <span>OpenClaw 已连接</span>
                       </>
                     ) : (
                       <>
                         <ZapOff className="w-3 h-3" />
-                        <span>Connect to OpenClaw</span>
+                        <span>连接 OpenClaw</span>
                       </>
                     )}
                   </button>
@@ -272,14 +272,14 @@ export function AgentsSidebar({ workspaceId, mobileMode = false, isPortrait = tr
             className="w-full min-h-11 flex items-center justify-center gap-2 px-3 bg-mc-bg-tertiary hover:bg-mc-border rounded text-sm text-mc-text-secondary hover:text-mc-text transition-colors"
           >
             <Plus className="w-4 h-4" />
-            Add Agent
+            添加 Agent
           </button>
           <button
             onClick={() => setShowDiscoverModal(true)}
             className="w-full min-h-11 flex items-center justify-center gap-2 px-3 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded text-sm text-blue-400 hover:text-blue-300 transition-colors"
           >
             <Search className="w-4 h-4" />
-            Import from Gateway
+            从网关导入
           </button>
         </div>
       )}

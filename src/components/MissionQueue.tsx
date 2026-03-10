@@ -16,13 +16,13 @@ interface MissionQueueProps {
 
 const COLUMNS: { id: TaskStatus; label: string; color: string }[] = [
   { id: 'planning', label: '📋 Planning', color: 'border-t-mc-accent-purple' },
-  { id: 'inbox', label: 'Inbox', color: 'border-t-mc-accent-pink' },
-  { id: 'assigned', label: 'Assigned', color: 'border-t-mc-accent-yellow' },
-  { id: 'in_progress', label: 'In Progress', color: 'border-t-mc-accent' },
-  { id: 'testing', label: 'Testing', color: 'border-t-mc-accent-cyan' },
-  { id: 'review', label: 'Review', color: 'border-t-mc-accent-purple' },
-  { id: 'verification', label: 'Verification', color: 'border-t-orange-500' },
-  { id: 'done', label: 'Done', color: 'border-t-mc-accent-green' },
+  { id: 'inbox', label: '待处理', color: 'border-t-mc-accent-pink' },
+  { id: 'assigned', label: '已分配', color: 'border-t-mc-accent-yellow' },
+  { id: 'in_progress', label: '进行中', color: 'border-t-mc-accent' },
+  { id: 'testing', label: '测试中', color: 'border-t-mc-accent-cyan' },
+  { id: 'review', label: '审核中', color: 'border-t-mc-accent-purple' },
+  { id: 'verification', label: '验证中', color: 'border-t-orange-500' },
+  { id: 'done', label: '已完成', color: 'border-t-mc-accent-green' },
 ];
 
 export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = true }: MissionQueueProps) {
@@ -61,7 +61,7 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
             taskId: task.id,
             taskTitle: task.title,
             agentId: task.assigned_agent_id,
-            agentName: task.assigned_agent?.name || 'Unknown Agent',
+            agentName: task.assigned_agent?.name || '未知 Agent',
             workspaceId: task.workspace_id,
           });
 

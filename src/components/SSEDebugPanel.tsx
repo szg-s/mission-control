@@ -102,7 +102,7 @@ export function SSEDebugPanel() {
           <div className="overflow-y-auto max-h-64 p-2 space-y-1 font-mono text-xs">
             {logs.length === 0 ? (
               <div className="text-mc-text-secondary text-center py-4">
-                Waiting for events...
+                等待事件...
               </div>
             ) : (
               logs.map((log, i) => (

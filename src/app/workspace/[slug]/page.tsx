@@ -196,7 +196,7 @@ export default function WorkspacePage() {
       <div className="min-h-screen bg-mc-bg flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-4 animate-pulse">🦞</div>
-          <p className="text-mc-text-secondary">Loading {slug}...</p>
+          <p className="text-mc-text-secondary">加载 {slug}...</p>
         </div>
       </div>
     );
