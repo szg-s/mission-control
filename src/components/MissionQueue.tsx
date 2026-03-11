@@ -7,6 +7,7 @@ import { triggerAutoDispatch, shouldTriggerAutoDispatch } from '@/lib/auto-dispa
 import type { Task, TaskStatus } from '@/lib/types';
 import { TaskModal } from './TaskModal';
 import { formatDistanceToNow } from 'date-fns';
+import { useI18n } from '@/lib/i18n';
 
 interface MissionQueueProps {
   workspaceId?: string;
@@ -14,19 +15,20 @@ interface MissionQueueProps {
   isPortrait?: boolean;
 }
 
-const COLUMNS: { id: TaskStatus; label: string; color: string }[] = [
-  { id: 'planning', label: '📋 Planning', color: 'border-t-mc-accent-purple' },
-  { id: 'inbox', label: '待处理', color: 'border-t-mc-accent-pink' },
-  { id: 'assigned', label: '已分配', color: 'border-t-mc-accent-yellow' },
-  { id: 'in_progress', label: '进行中', color: 'border-t-mc-accent' },
-  { id: 'testing', label: '测试中', color: 'border-t-mc-accent-cyan' },
-  { id: 'review', label: '审核中', color: 'border-t-mc-accent-purple' },
-  { id: 'verification', label: '验证中', color: 'border-t-orange-500' },
-  { id: 'done', label: '已完成', color: 'border-t-mc-accent-green' },
-];
-
 export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = true }: MissionQueueProps) {
+  const { t } = useI18n();
   const { tasks, updateTaskStatus, addEvent } = useMissionControl();
+
+  const COLUMNS: { id: TaskStatus; label: string; color: string }[] = [
+    { id: 'planning', label: `📋 ${t('tasks.status.planning')}`, color: 'border-t-mc-accent-purple' },
+    { id: 'inbox', label: t('tasks.status.pending'), color: 'border-t-mc-accent-pink' },
+    { id: 'assigned', label: t('tasks.status.assigned'), color: 'border-t-mc-accent-yellow' },
+    { id: 'in_progress', label: t('tasks.status.working'), color: 'border-t-mc-accent' },
+    { id: 'testing', label: t('tasks.status.testing'), color: 'border-t-mc-accent-cyan' },
+    { id: 'review', label: t('tasks.status.review'), color: 'border-t-mc-accent-purple' },
+    { id: 'verification', label: t('tasks.status.verification'), color: 'border-t-orange-500' },
+    { id: 'done', label: t('tasks.status.done'), color: 'border-t-mc-accent-green' },
+  ];
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
@@ -107,14 +109,14 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
       <div className="p-3 border-b border-mc-border flex items-center justify-between">
         <div className="flex items-center gap-2">
           <ChevronRight className="w-4 h-4 text-mc-text-secondary" />
-          <span className="text-sm font-medium uppercase tracking-wider">Mission Queue</span>
+          <span className="text-sm font-medium uppercase tracking-wider">{t('tasks.missionQueue')}</span>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
           className="flex items-center gap-2 px-4 min-h-11 bg-mc-accent-pink text-mc-bg rounded text-sm font-medium hover:bg-mc-accent-pink/90"
         >
           <Plus className="w-4 h-4" />
-          New Task
+          {t('tasks.addTask')}
         </button>
       </div>
 
@@ -177,7 +179,7 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
           <div className={`min-w-0 ${isPortrait ? 'space-y-3' : 'space-y-2'}`}>
             {mobileTasks.length === 0 ? (
               <div className="text-sm text-mc-text-secondary bg-mc-bg-secondary border border-mc-border rounded-lg p-4">
-                No tasks in this status.
+                {t('tasks.noTasks')}
               </div>
             ) : (
               mobileTasks.map((task) => (
@@ -206,7 +208,7 @@ export function MissionQueue({ workspaceId, mobileMode = false, isPortrait = tru
             className="w-full sm:max-w-md bg-mc-bg-secondary border border-mc-border rounded-t-xl sm:rounded-xl p-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-sm text-mc-text-secondary mb-2">Move task</div>
+            <div className="text-sm text-mc-text-secondary mb-2">{t('tasks.moveTask')}</div>
             <div className="font-medium mb-4 line-clamp-2">{statusMoveTask.title}</div>
             <div className="space-y-2 max-h-[50vh] overflow-y-auto">
               {COLUMNS.map((column) => (
@@ -241,6 +243,7 @@ interface TaskCardProps {
 }
 
 function TaskCard({ task, onDragStart, onClick, onMoveStatus, isDragging, mobileMode, portraitMode = true }: TaskCardProps) {
+  const { t } = useI18n();
   const priorityStyles = {
     low: 'text-mc-text-secondary',
     normal: 'text-mc-accent',
@@ -280,7 +283,7 @@ function TaskCard({ task, onDragStart, onClick, onMoveStatus, isDragging, mobile
         {isPlanning && (
           <div className={`flex items-center gap-2 ${portraitMode ? 'mb-3 py-2 px-3' : 'mb-2 py-1.5 px-2.5'} bg-purple-500/10 rounded-md border border-purple-500/20`}>
             <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse flex-shrink-0" />
-            <span className="text-xs text-purple-400 font-medium">Continue planning</span>
+            <span className="text-xs text-purple-400 font-medium">{t('tasks.continuePlanning')}</span>
           </div>
         )}
 

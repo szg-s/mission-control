@@ -12,6 +12,7 @@ import { SSEDebugPanel } from '@/components/SSEDebugPanel';
 import { useMissionControl } from '@/lib/store';
 import { useSSE } from '@/hooks/useSSE';
 import { debug } from '@/lib/debug';
+import { useI18n } from '@/lib/i18n';
 import type { Task, Workspace } from '@/lib/types';
 
 type MobileTab = 'queue' | 'agents' | 'feed' | 'settings';
@@ -26,6 +27,7 @@ export default function WorkspacePage() {
   const [notFound, setNotFound] = useState(false);
   const [mobileTab, setMobileTab] = useState<MobileTab>('queue');
   const [isPortrait, setIsPortrait] = useState(true);
+  const { t } = useI18n();
 
   useSSE();
 
@@ -180,11 +182,11 @@ export default function WorkspacePage() {
       <div className="min-h-screen bg-mc-bg flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">🔍</div>
-          <h1 className="text-2xl font-bold mb-2">Workspace Not Found</h1>
-          <p className="text-mc-text-secondary mb-6">The workspace &ldquo;{slug}&rdquo; doesn&apos;t exist.</p>
+          <h1 className="text-2xl font-bold mb-2">{t("workspace.notFound")}</h1>
+          <p className="text-mc-text-secondary mb-6">{t("workspace.notFoundDesc", { slug })}</p>
           <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-mc-accent text-mc-bg rounded-lg font-medium hover:bg-mc-accent/90">
             <ChevronLeft className="w-4 h-4" />
-            Back to Dashboard
+            {t("workspace.backToDashboard")}
           </Link>
         </div>
       </div>
@@ -196,7 +198,7 @@ export default function WorkspacePage() {
       <div className="min-h-screen bg-mc-bg flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-4 animate-pulse">🦞</div>
-          <p className="text-mc-text-secondary">加载 {slug}...</p>
+          <p className="text-mc-text-secondary">{t("common.loading")}</p>
         </div>
       </div>
     );
@@ -242,21 +244,15 @@ export default function WorkspacePage() {
                 <button
                   onClick={() => setMobileTab('agents')}
                   className={`min-h-11 rounded-lg text-xs ${mobileTab === 'agents' ? 'bg-mc-accent text-mc-bg font-medium' : 'bg-mc-bg-secondary border border-mc-border text-mc-text-secondary'}`}
-                >
-                  Agents
-                </button>
+                >{t("agents.title")}</button>
                 <button
                   onClick={() => setMobileTab('feed')}
                   className={`min-h-11 rounded-lg text-xs ${mobileTab === 'feed' ? 'bg-mc-accent text-mc-bg font-medium' : 'bg-mc-bg-secondary border border-mc-border text-mc-text-secondary'}`}
-                >
-                  Feed
-                </button>
+                >{t("feed.title")}</button>
                 <button
                   onClick={() => setMobileTab('settings')}
                   className={`min-h-11 rounded-lg text-xs ${mobileTab === 'settings' ? 'bg-mc-accent text-mc-bg font-medium' : 'bg-mc-bg-secondary border border-mc-border text-mc-text-secondary'}`}
-                >
-                  Settings
-                </button>
+                >{t("common.settings")}</button>
               </div>
 
               <div className="min-h-0 flex-1">
@@ -276,10 +272,10 @@ export default function WorkspacePage() {
       {showMobileBottomTabs && (
         <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-mc-border bg-mc-bg-secondary pb-[env(safe-area-inset-bottom)]">
           <div className="grid grid-cols-4 gap-1 p-2">
-            <MobileTabButton label="Queue" active={mobileTab === 'queue'} icon={<ListTodo className="w-5 h-5" />} onClick={() => setMobileTab('queue')} />
-            <MobileTabButton label="Agents" active={mobileTab === 'agents'} icon={<Users className="w-5 h-5" />} onClick={() => setMobileTab('agents')} />
-            <MobileTabButton label="Feed" active={mobileTab === 'feed'} icon={<Activity className="w-5 h-5" />} onClick={() => setMobileTab('feed')} />
-            <MobileTabButton label="Settings" active={mobileTab === 'settings'} icon={<SettingsIcon className="w-5 h-5" />} onClick={() => setMobileTab('settings')} />
+            <MobileTabButton label={t("tasks.missionQueue")} active={mobileTab === 'queue'} icon={<ListTodo className="w-5 h-5" />} onClick={() => setMobileTab('queue')} />
+            <MobileTabButton label={t("agents.title")} active={mobileTab === 'agents'} icon={<Users className="w-5 h-5" />} onClick={() => setMobileTab('agents')} />
+            <MobileTabButton label={t("feed.title")} active={mobileTab === 'feed'} icon={<Activity className="w-5 h-5" />} onClick={() => setMobileTab('feed')} />
+            <MobileTabButton label={t("common.settings")} active={mobileTab === 'settings'} icon={<SettingsIcon className="w-5 h-5" />} onClick={() => setMobileTab('settings')} />
           </div>
         </nav>
       )}
@@ -304,11 +300,13 @@ function MobileTabButton({ label, active, icon, onClick }: { label: string; acti
 }
 
 function MobileSettingsPanel({ workspace, denseLandscape = false }: { workspace: Workspace; denseLandscape?: boolean }) {
+  const { t } = useI18n();
+
   return (
     <div className={`h-full overflow-y-auto ${denseLandscape ? 'p-0 pb-[env(safe-area-inset-bottom)]' : 'p-3 pb-[calc(1rem+env(safe-area-inset-bottom))]'}`}>
       <div className="space-y-3">
         <div className="bg-mc-bg-secondary border border-mc-border rounded-lg p-4">
-          <div className="text-sm text-mc-text-secondary mb-2">Current workspace</div>
+          <div className="text-sm text-mc-text-secondary mb-2">{t('workspace.currentWorkspace')}</div>
           <div className="flex items-center gap-2 text-base font-medium">
             <span>{workspace.icon}</span>
             <span>{workspace.name}</span>
@@ -320,14 +318,14 @@ function MobileSettingsPanel({ workspace, denseLandscape = false }: { workspace:
         <Link href={`/workspace/${workspace.slug}/activity`} className="w-full min-h-11 px-4 rounded-lg border border-mc-border bg-mc-bg-secondary flex items-center justify-between text-sm">
           <span className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
-            Agent Activity Dashboard
+            {t('workspace.activityDashboard')}
           </span>
           <ExternalLink className="w-4 h-4 text-mc-text-secondary" />
         </Link>
         <Link href="/settings" className="w-full min-h-11 px-4 rounded-lg border border-mc-border bg-mc-bg-secondary flex items-center justify-between text-sm">
           <span className="flex items-center gap-2">
             <SettingsIcon className="w-4 h-4" />
-            Open Mission Control Settings
+            {t('workspace.openSettings')}
           </span>
           <ExternalLink className="w-4 h-4 text-mc-text-secondary" />
         </Link>
@@ -335,7 +333,7 @@ function MobileSettingsPanel({ workspace, denseLandscape = false }: { workspace:
         <Link href="/" className="w-full min-h-11 px-4 rounded-lg border border-mc-border bg-mc-bg-secondary flex items-center justify-between text-sm">
           <span className="flex items-center gap-2">
             <Home className="w-4 h-4" />
-            Back to Workspaces
+            {t('workspace.backToWorkspaces')}
           </span>
           <ExternalLink className="w-4 h-4 text-mc-text-secondary" />
         </Link>

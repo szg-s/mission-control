@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import DemoBanner from '@/components/DemoBanner';
+import { I18nProvider } from '@/lib/i18n';
 
 export const metadata: Metadata = {
   title: 'Mission Control - 任务控制中心',
@@ -16,10 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body className="bg-mc-bg text-mc-text min-h-screen">
-        <DemoBanner />
-        {children}
+        <I18nProvider>
+          <DemoBanner />
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );

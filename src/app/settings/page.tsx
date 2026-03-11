@@ -7,8 +7,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Settings, Save, RotateCcw, Home, FolderOpen, Link as LinkIcon } from 'lucide-react';
+import { Settings, Save, RotateCcw, FolderOpen, Link as LinkIcon } from 'lucide-react';
 import { getConfig, updateConfig, resetConfig, type MissionControlConfig } from '@/lib/config';
+import { useI18n, LanguageSwitcher } from '@/lib/i18n';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     setConfig(getConfig());
@@ -33,14 +35,14 @@ export default function SettingsPage() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '保存设置失败');
+      setError(err instanceof Error ? err.message : t('settings.saveFailed'));
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleReset = () => {
-    if (confirm('重置所有设置为默认值？此操作无法撤销。')) {
+    if (confirm(t('settings.resetConfirm'))) {
       resetConfig();
       setConfig(getConfig());
       setSaveSuccess(true);
@@ -56,7 +58,7 @@ export default function SettingsPage() {
   if (!config) {
     return (
       <div className="min-h-screen bg-mc-bg flex items-center justify-center">
-        <div className="text-mc-text-secondary">加载设置中...</div>
+        <div className="text-mc-text-secondary">{t('common.loading')}</div>
       </div>
     );
   }
@@ -70,12 +72,12 @@ export default function SettingsPage() {
             <button
               onClick={() => router.push('/')}
               className="p-2 hover:bg-mc-bg-tertiary rounded text-mc-text-secondary"
-              title="返回 Mission Control"
+              title={t('common.back')}
             >
-              ← 返回
+              {t('settings.back')}
             </button>
             <Settings className="w-6 h-6 text-mc-accent" />
-            <h1 className="text-2xl font-bold text-mc-text">设置</h1>
+            <h1 className="text-2xl font-bold text-mc-text">{t('settings.title')}</h1>
           </div>
 
           <div className="flex items-center gap-2">
@@ -84,7 +86,7 @@ export default function SettingsPage() {
               className="px-4 py-2 border border-mc-border rounded hover:bg-mc-bg-tertiary text-mc-text-secondary flex items-center gap-2"
             >
               <RotateCcw className="w-4 h-4" />
-              恢复默认
+              {t('settings.resetDefault')}
             </button>
             <button
               onClick={handleSave}
@@ -92,7 +94,7 @@ export default function SettingsPage() {
               className="px-4 py-2 bg-mc-accent text-mc-bg rounded hover:bg-mc-accent/90 flex items-center gap-2 disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              {isSaving ? '保存中...' : '保存更改'}
+              {isSaving ? t('settings.saving') : t('settings.saveChanges')}
             </button>
           </div>
         </div>
@@ -103,7 +105,7 @@ export default function SettingsPage() {
         {/* Success Message */}
         {saveSuccess && (
           <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded text-green-400">
-            ✓ 设置保存成功
+            ✓ {t('settings.saveSuccess')}
           </div>
         )}
 
@@ -114,20 +116,33 @@ export default function SettingsPage() {
           </div>
         )}
 
+        {/* Language Selection */}
+        <section className="mb-8 p-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-mc-text">{t('common.language')}</h2>
+              <p className="text-sm text-mc-text-secondary mt-1">
+                {t('common.english')} / {t('common.chinese')}
+              </p>
+            </div>
+            <LanguageSwitcher />
+          </div>
+        </section>
+
         {/* Workspace Paths */}
         <section className="mb-8 p-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
           <div className="flex items-center gap-2 mb-4">
             <FolderOpen className="w-5 h-5 text-mc-accent" />
-            <h2 className="text-xl font-semibold text-mc-text">工作区路径</h2>
+            <h2 className="text-xl font-semibold text-mc-text">{t('settings.workspacePaths')}</h2>
           </div>
           <p className="text-sm text-mc-text-secondary mb-4">
-            配置 Mission Control 存储项目和交付物的位置。
+            {t('settings.workspacePathsDesc')}
           </p>
 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-mc-text mb-2">
-                工作区根路径
+                {t('settings.workspaceBasePath')}
               </label>
               <input
                 type="text"
@@ -137,13 +152,13 @@ export default function SettingsPage() {
                 className="w-full px-4 py-2 bg-mc-bg border border-mc-border rounded text-mc-text focus:border-mc-accent focus:outline-none"
               />
               <p className="text-xs text-mc-text-secondary mt-1">
-                所有 Mission Control 文件的根目录。使用 ~ 表示主目录。
+                {t('settings.workspaceBasePathDesc')}
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-mc-text mb-2">
-                项目路径
+                {t('settings.projectsPath')}
               </label>
               <input
                 type="text"
@@ -153,13 +168,13 @@ export default function SettingsPage() {
                 className="w-full px-4 py-2 bg-mc-bg border border-mc-border rounded text-mc-text focus:border-mc-accent focus:outline-none"
               />
               <p className="text-xs text-mc-text-secondary mt-1">
-                创建项目文件夹的目录。每个项目拥有独立文件夹。
+                {t('settings.projectsPathDesc')}
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-mc-text mb-2">
-                默认项目名称
+                {t('settings.defaultProjectName')}
               </label>
               <input
                 type="text"
@@ -169,7 +184,7 @@ export default function SettingsPage() {
                 className="w-full px-4 py-2 bg-mc-bg border border-mc-border rounded text-mc-text focus:border-mc-accent focus:outline-none"
               />
               <p className="text-xs text-mc-text-secondary mt-1">
-                新项目的默认名称。可按项目单独修改。
+                {t('settings.defaultProjectNameDesc')}
               </p>
             </div>
           </div>
@@ -179,16 +194,16 @@ export default function SettingsPage() {
         <section className="mb-8 p-6 bg-mc-bg-secondary border border-mc-border rounded-lg">
           <div className="flex items-center gap-2 mb-4">
             <LinkIcon className="w-5 h-5 text-mc-accent" />
-            <h2 className="text-xl font-semibold text-mc-text">API 配置</h2>
+            <h2 className="text-xl font-semibold text-mc-text">{t('settings.apiConfig')}</h2>
           </div>
           <p className="text-sm text-mc-text-secondary mb-4">
-            配置 Mission Control API 地址，用于 Agent 编排。
+            {t('settings.apiConfigDesc')}
           </p>
 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-mc-text mb-2">
-                Mission Control 地址
+                {t('settings.missionControlUrl')}
               </label>
               <input
                 type="text"
@@ -198,7 +213,7 @@ export default function SettingsPage() {
                 className="w-full px-4 py-2 bg-mc-bg border border-mc-border rounded text-mc-text focus:border-mc-accent focus:outline-none"
               />
               <p className="text-xs text-mc-text-secondary mt-1">
-                Mission Control 运行的地址。默认自动检测。远程访问时需修改。
+                {t('settings.missionControlUrlDesc')}
               </p>
             </div>
           </div>
@@ -207,20 +222,20 @@ export default function SettingsPage() {
         {/* Environment Variables Note */}
         <section className="p-6 bg-blue-500/10 border border-blue-500/30 rounded-lg">
           <h3 className="text-lg font-semibold text-blue-400 mb-2">
-            📝 环境变量
+            📝 {t('settings.envVars')}
           </h3>
           <p className="text-sm text-blue-300 mb-3">
-            部分设置也可通过环境变量在 <code className="px-2 py-1 bg-mc-bg rounded">.env.local</code>:
+            {t('settings.envVarsNote')} <code className="px-2 py-1 bg-mc-bg rounded">.env.local</code>:
           </p>
           <ul className="text-sm text-blue-300 space-y-1 ml-4 list-disc">
-            <li><code>MISSION_CONTROL_URL</code> - API 地址覆盖</li>
-            <li><code>WORKSPACE_BASE_PATH</code> - 工作区根目录</li>
-            <li><code>PROJECTS_PATH</code> - 项目目录</li>
-            <li><code>OPENCLAW_GATEWAY_URL</code> - 网关 WebSocket 地址</li>
-            <li><code>OPENCLAW_GATEWAY_TOKEN</code> - 网关认证令牌</li>
+            <li><code>MISSION_CONTROL_URL</code> - API URL override</li>
+            <li><code>WORKSPACE_BASE_PATH</code> - Workspace root</li>
+            <li><code>PROJECTS_PATH</code> - Projects directory</li>
+            <li><code>OPENCLAW_GATEWAY_URL</code> - Gateway WebSocket URL</li>
+            <li><code>OPENCLAW_GATEWAY_TOKEN</code> - Gateway auth token</li>
           </ul>
           <p className="text-xs text-blue-400 mt-3">
-            对于服务端操作，环境变量的优先级高于界面设置。
+            {t('settings.envVarsOverride')}
           </p>
         </section>
       </div>

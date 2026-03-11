@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import { Plus, ArrowRight, Folder, Users, CheckSquare, Trash2, AlertTriangle, Activity } from 'lucide-react';
 import Link from 'next/link';
 import type { WorkspaceStats } from '@/lib/types';
+import { useI18n, LanguageSwitcher } from '@/lib/i18n';
 
 export function WorkspaceDashboard() {
   const [workspaces, setWorkspaces] = useState<WorkspaceStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     loadWorkspaces();
@@ -33,7 +35,7 @@ export function WorkspaceDashboard() {
       <div className="min-h-screen bg-mc-bg flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-4 animate-pulse">🦞</div>
-          <p className="text-mc-text-secondary">加载工作区中...</p>
+          <p className="text-mc-text-secondary">{t('workspace.loading')}</p>
         </div>
       </div>
     );
@@ -50,19 +52,20 @@ export function WorkspaceDashboard() {
               <h1 className="text-xl font-bold">Mission Control</h1>
             </div>
             <div className="flex items-center gap-2">
+              <LanguageSwitcher />
               <Link
                 href={workspaces.length > 0 ? `/workspace/${workspaces[0].slug}/activity` : '/workspace/default/activity'}
                 className="min-h-11 px-4 rounded-lg border border-mc-border bg-mc-bg text-mc-text-secondary hover:text-mc-text hover:bg-mc-bg-tertiary flex items-center gap-2 text-sm"
               >
                 <Activity className="w-4 h-4" />
-                Activity Dashboard
+                {t('workspace.activityDashboard')}
               </Link>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="min-h-11 flex items-center gap-2 px-4 bg-mc-accent text-mc-bg rounded-lg font-medium hover:bg-mc-accent/90"
               >
                 <Plus className="w-4 h-4" />
-                New Workspace
+                {t('workspace.newWorkspace')}
               </button>
             </div>
           </div>
@@ -72,36 +75,36 @@ export function WorkspaceDashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">All Workspaces</h2>
+          <h2 className="text-2xl font-bold mb-2">{t('workspace.title')}</h2>
           <p className="text-mc-text-secondary">
-            Select a workspace to view its mission queue and agents
+            {t('workspace.subtitle')}
           </p>
         </div>
 
         {workspaces.length === 0 ? (
           <div className="text-center py-16">
             <Folder className="w-16 h-16 mx-auto text-mc-text-secondary mb-4" />
-            <h3 className="text-lg font-medium mb-2">No workspaces yet</h3>
+            <h3 className="text-lg font-medium mb-2">{t('workspace.noWorkspaces')}</h3>
             <p className="text-mc-text-secondary mb-6">
-              Create your first workspace to get started
+              {t('workspace.createFirst')}
             </p>
             <button
               onClick={() => setShowCreateModal(true)}
               className="px-6 py-3 bg-mc-accent text-mc-bg rounded-lg font-medium hover:bg-mc-accent/90"
             >
-              Create Workspace
+              {t('workspace.createWorkspace')}
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {workspaces.map((workspace) => (
-              <WorkspaceCard 
-                key={workspace.id} 
-                workspace={workspace} 
+              <WorkspaceCard
+                key={workspace.id}
+                workspace={workspace}
                 onDelete={(id) => setWorkspaces(workspaces.filter(w => w.id !== id))}
               />
             ))}
-            
+
             {/* Add workspace card */}
             <button
               onClick={() => setShowCreateModal(true)}
@@ -110,7 +113,7 @@ export function WorkspaceDashboard() {
               <div className="w-12 h-12 rounded-full bg-mc-bg-tertiary flex items-center justify-center">
                 <Plus className="w-6 h-6 text-mc-text-secondary" />
               </div>
-              <span className="text-mc-text-secondary font-medium">Add Workspace</span>
+              <span className="text-mc-text-secondary font-medium">{t('workspace.addWorkspace')}</span>
             </button>
           </div>
         )}
@@ -118,7 +121,7 @@ export function WorkspaceDashboard() {
 
       {/* Create Modal */}
       {showCreateModal && (
-        <CreateWorkspaceModal 
+        <CreateWorkspaceModal
           onClose={() => setShowCreateModal(false)}
           onCreated={() => {
             setShowCreateModal(false);
@@ -133,6 +136,7 @@ export function WorkspaceDashboard() {
 function WorkspaceCard({ workspace, onDelete }: { workspace: WorkspaceStats; onDelete: (id: string) => void }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const { t } = useI18n();
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -144,103 +148,103 @@ function WorkspaceCard({ workspace, onDelete }: { workspace: WorkspaceStats; onD
         onDelete(workspace.id);
       } else {
         const data = await res.json();
-        alert(data.error || '删除工作区失败');
+        alert(data.error || t('workspace.deleteFailed'));
       }
     } catch {
-      alert('删除工作区失败');
+      alert(t('workspace.deleteFailed'));
     } finally {
       setDeleting(false);
       setShowDeleteConfirm(false);
     }
   };
-  
+
   return (
     <>
-    <Link href={`/workspace/${workspace.slug}`}>
-      <div className="bg-mc-bg-secondary border border-mc-border rounded-xl p-4 sm:p-6 hover:border-mc-accent/50 transition-all hover:shadow-lg cursor-pointer group relative min-h-[172px]">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">{workspace.icon}</span>
-            <div>
-              <h3 className="font-semibold text-lg group-hover:text-mc-accent transition-colors">
-                {workspace.name}
-              </h3>
-              <p className="text-sm text-mc-text-secondary">/{workspace.slug}</p>
+      <Link href={`/workspace/${workspace.slug}`}>
+        <div className="bg-mc-bg-secondary border border-mc-border rounded-xl p-4 sm:p-6 hover:border-mc-accent/50 transition-all hover:shadow-lg cursor-pointer group relative min-h-[172px]">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">{workspace.icon}</span>
+              <div>
+                <h3 className="font-semibold text-lg group-hover:text-mc-accent transition-colors">
+                  {workspace.name}
+                </h3>
+                <p className="text-sm text-mc-text-secondary">/{workspace.slug}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {workspace.id !== 'default' && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowDeleteConfirm(true);
+                  }}
+                  className="p-1.5 rounded hover:bg-mc-accent-red/20 text-mc-text-secondary hover:text-mc-accent-red transition-colors opacity-0 group-hover:opacity-100"
+                  title={t('workspace.deleteWorkspace')}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+              <ArrowRight className="w-5 h-5 text-mc-text-secondary group-hover:text-mc-accent transition-colors" />
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {workspace.id !== 'default' && (
+
+          {/* Simple task/agent counts */}
+          <div className="flex items-center gap-4 text-sm text-mc-text-secondary mt-4">
+            <div className="flex items-center gap-1">
+              <CheckSquare className="w-4 h-4" />
+              <span>{workspace.taskCounts.total} {t('common.tasks')}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Users className="w-4 h-4" />
+              <span>{workspace.agentCount} {t('common.agents')}</span>
+            </div>
+          </div>
+        </div>
+      </Link>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-3 sm:p-4" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="bg-mc-bg-secondary border border-mc-border rounded-t-xl sm:rounded-xl w-full max-w-md p-5 sm:p-6 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:pb-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-mc-accent-red/20 rounded-full">
+                <AlertTriangle className="w-6 h-6 text-mc-accent-red" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">{t('workspace.deleteWorkspace')}</h3>
+                <p className="text-sm text-mc-text-secondary">{t('workspace.deleteConfirm')}</p>
+              </div>
+            </div>
+
+            <p className="text-mc-text-secondary mb-6">
+              {t('workspace.deleteQuestion')} <strong>{workspace.name}</strong>?
+              {workspace.taskCounts.total > 0 && (
+                <span className="block mt-2 text-mc-accent-red">
+                  ⚠️ {t('workspace.deleteHasTasks', { count: workspace.taskCounts.total })}
+                </span>
+              )}
+            </p>
+
+            <div className="flex justify-end gap-3">
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowDeleteConfirm(true);
-                }}
-                className="p-1.5 rounded hover:bg-mc-accent-red/20 text-mc-text-secondary hover:text-mc-accent-red transition-colors opacity-0 group-hover:opacity-100"
-                title="删除工作区"
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 text-mc-text-secondary hover:text-mc-text"
               >
-                <Trash2 className="w-4 h-4" />
+                {t('common.cancel')}
               </button>
-            )}
-            <ArrowRight className="w-5 h-5 text-mc-text-secondary group-hover:text-mc-accent transition-colors" />
-          </div>
-        </div>
-
-        {/* Simple task/agent counts */}
-        <div className="flex items-center gap-4 text-sm text-mc-text-secondary mt-4">
-          <div className="flex items-center gap-1">
-            <CheckSquare className="w-4 h-4" />
-            <span>{workspace.taskCounts.total} tasks</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Users className="w-4 h-4" />
-            <span>{workspace.agentCount} agents</span>
-          </div>
-        </div>
-      </div>
-    </Link>
-
-    {/* Delete Confirmation Modal */}
-    {showDeleteConfirm && (
-      <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-3 sm:p-4" onClick={() => setShowDeleteConfirm(false)}>
-        <div className="bg-mc-bg-secondary border border-mc-border rounded-t-xl sm:rounded-xl w-full max-w-md p-5 sm:p-6 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:pb-6" onClick={e => e.stopPropagation()}>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-mc-accent-red/20 rounded-full">
-              <AlertTriangle className="w-6 h-6 text-mc-accent-red" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">Delete Workspace</h3>
-              <p className="text-sm text-mc-text-secondary">This action cannot be undone</p>
+              <button
+                onClick={handleDelete}
+                disabled={deleting || workspace.taskCounts.total > 0 || workspace.agentCount > 0}
+                className="px-4 py-2 bg-mc-accent-red text-white rounded-lg font-medium hover:bg-mc-accent-red/90 disabled:opacity-50"
+              >
+                {deleting ? t('workspace.deleting') : t('workspace.deleteWorkspace')}
+              </button>
             </div>
           </div>
-          
-          <p className="text-mc-text-secondary mb-6">
-            Are you sure you want to delete <strong>{workspace.name}</strong>? 
-            {workspace.taskCounts.total > 0 && (
-              <span className="block mt-2 text-mc-accent-red">
-                ⚠️ This workspace has {workspace.taskCounts.total} task(s). Delete them first.
-              </span>
-            )}
-          </p>
-          
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={() => setShowDeleteConfirm(false)}
-              className="px-4 py-2 text-mc-text-secondary hover:text-mc-text"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleDelete}
-              disabled={deleting || workspace.taskCounts.total > 0 || workspace.agentCount > 0}
-              className="px-4 py-2 bg-mc-accent-red text-white rounded-lg font-medium hover:bg-mc-accent-red/90 disabled:opacity-50"
-            >
-              {deleting ? '删除中...' : '删除工作区'}
-            </button>
-          </div>
         </div>
-      </div>
-    )}
+      )}
     </>
   );
 }
@@ -250,6 +254,7 @@ function CreateWorkspaceModal({ onClose, onCreated }: { onClose: () => void; onC
   const [icon, setIcon] = useState('📁');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useI18n();
 
   const icons = ['📁', '💼', '🏢', '🚀', '💡', '🎯', '📊', '🔧', '🌟', '🏠'];
 
@@ -271,10 +276,10 @@ function CreateWorkspaceModal({ onClose, onCreated }: { onClose: () => void; onC
         onCreated();
       } else {
         const data = await res.json();
-        setError(data.error || '创建工作区失败');
+        setError(data.error || t('workspace.createFailed'));
       }
     } catch {
-      setError('创建工作区失败');
+      setError(t('workspace.createFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -284,13 +289,13 @@ function CreateWorkspaceModal({ onClose, onCreated }: { onClose: () => void; onC
     <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-3 sm:p-4">
       <div className="bg-mc-bg-secondary border border-mc-border rounded-t-xl sm:rounded-xl w-full max-w-md pb-[env(safe-area-inset-bottom)] sm:pb-0">
         <div className="p-6 border-b border-mc-border">
-          <h2 className="text-lg font-semibold">Create New Workspace</h2>
+          <h2 className="text-lg font-semibold">{t('workspace.createNew')}</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Icon selector */}
           <div>
-            <label className="block text-sm font-medium mb-2">Icon</label>
+            <label className="block text-sm font-medium mb-2">{t('workspace.selectIcon')}</label>
             <div className="flex flex-wrap gap-2">
               {icons.map((i) => (
                 <button
@@ -298,8 +303,8 @@ function CreateWorkspaceModal({ onClose, onCreated }: { onClose: () => void; onC
                   type="button"
                   onClick={() => setIcon(i)}
                   className={`w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-colors ${
-                    icon === i 
-                      ? 'bg-mc-accent/20 border-2 border-mc-accent' 
+                    icon === i
+                      ? 'bg-mc-accent/20 border-2 border-mc-accent'
                       : 'bg-mc-bg border border-mc-border hover:border-mc-accent/50'
                   }`}
                 >
@@ -311,12 +316,12 @@ function CreateWorkspaceModal({ onClose, onCreated }: { onClose: () => void; onC
 
           {/* Name input */}
           <div>
-            <label className="block text-sm font-medium mb-2">Name</label>
+            <label className="block text-sm font-medium mb-2">{t('workspace.inputName')}</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Acme Corp"
+              placeholder={t('workspace.namePlaceholder')}
               className="w-full bg-mc-bg border border-mc-border rounded-lg px-4 py-2 focus:outline-none focus:border-mc-accent"
               autoFocus
             />
@@ -332,14 +337,14 @@ function CreateWorkspaceModal({ onClose, onCreated }: { onClose: () => void; onC
               onClick={onClose}
               className="px-4 py-2 text-mc-text-secondary hover:text-mc-text"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={!name.trim() || isSubmitting}
               className="px-6 py-2 bg-mc-accent text-mc-bg rounded-lg font-medium hover:bg-mc-accent/90 disabled:opacity-50"
             >
-              {isSubmitting ? '创建中...' : '创建工作区'}
+              {isSubmitting ? t('workspace.creating') : t('workspace.createWorkspace')}
             </button>
           </div>
         </form>

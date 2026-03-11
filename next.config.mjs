@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/mc',
+  assetPrefix: '/mc',
   experimental: {
     serverComponentsExternalPackages: ['better-sqlite3'],
   },
